@@ -3,12 +3,12 @@ import json
 from logic import recommend
 app = Flask(__name__)
 
-@app.route('/health')
+@app.route('similarityAlg/health')
 def hello_world():
     return 'Hi there, im healthy!'
 
 
-@app.route('/api/v2/flow/recommend', methods=['POST'])
+@app.route('/api/v2/similarityAlg/flow/recommend', methods=['POST'])
 def reccommend():
     person = request.json
     return json.dumps(recommend(person['name'], person['data'], 5)), 200, {'Content-Type': 'application/json'}
