@@ -31,7 +31,7 @@ jobs:
 #                - dependency-cache-
       - run:
             name: Docker build/push
-            command: 'fabric/circleci/docker_build_and_push.sh . similarity-alg "$CIRCLE_BUILD_NUM" "latest"
+            command: 'fabric/circleci/docker_build_and_push.sh . similarity-alg "$CIRCLE_BUILD_NUM" "latest"'
 #      - save_cache:
 #            key: dependency-cache-{{ checksum "build.gradle" }}
 #            paths:
