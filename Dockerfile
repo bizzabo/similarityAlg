@@ -1,4 +1,4 @@
-FROM python:alpine3.6
+FROM python:3.6
 
 #ADD controller.py /
 ENV SERVICE_NAME=similarity-alg
