@@ -128,7 +128,7 @@ def pearson_similarity(person1, person2):
 def recommend(person,personObj, bound, similarity=pearson_similarity):
     data = data3
     data[person] = personObj
-    scores = [(similarity(person, other,personObj), other) for other in data if other != person]
+    scores = [(similarity(person, other), other) for other in data if other != person]
     scores.sort()
     scores.reverse()
     scores = scores[0:bound]
