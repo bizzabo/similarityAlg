@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  build:
+    machine: true
+#    environment:
+#      CIRCLE_ARTIFACTS: /tmp/artifacts
+#      _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+#      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+#    python:
+#      version: 2.7.10
+    steps:
+      - checkout
+#      - run:
+#            name: Prepare artifacts storage
+#            command: mkdir $CIRCLE_ARTIFACTS
+      - run:
+            name: Clone Fabric
+            command: 'git clone https://github.com/bizzabo/fabric.git'
+#      - run:
+#            name: Install Fabric dependecies
+#            command: |
+#              sudo apt-get update
+#              sudo apt-get install python-dev
+#              sudo python -m pip install -U pip
+#      - run:
+#            name: Install Fabric libs
+#            command: sudo pip install requests gdata boto python-jenkins fabric-slack-tools fabric==1.14.0 --upgrade --ignore-installed
+#      - restore_cache:
+#            keys:
+#                - dependency-cache-{{ checksum "build.gradle" }}
+#                - dependency-cache-
+      - run:
+            name: Docker build/push
+            command: 'fabric/circleci/docker_build_and_push.sh . similarity-alg "$CIRCLE_BUILD_NUM" "latest"
+#      - save_cache:
+#            key: dependency-cache-{{ checksum "build.gradle" }}
+#            paths:
+#              - ~/.gradle
+#      - run:
+#            name: Run tests
+#            command: |
+#              ./gradlew test
+#              mkdir /tmp/junit
+#              find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} /tmp/junit/ \;
+#      - store_test_results:
+#            path: /tmp/junit
+#      - run:
+#            name: Print deploy instructions
+#            command: fabric/circleci/create_deploy_instructions.sh gate
+#      - run:
+#            name: Deploy based on a commit message
+#            command: fabric/circleci/commit_message_actions.sh gate
+#      - store_artifacts:
+#            path: /tmp/artifacts
