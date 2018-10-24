@@ -1,23 +1,83 @@
 import math
+import pandas as pd
+
+
+CSV_PATH = 'data.csv'
+MAIN_DATA_KEY = 'Name'
+
 
 industryMap = {
-    'MARKETING_AND_ADVERTISING': 1,
-    'INTERNET': 2,
-    'EDUCATION_MANAGEMENT': 3,
-    'COMPUTER_SOFTWARE': 4,
-    'BANKING': 5
+'MARKETING_AND_ADVERTISING':2,
+'INTERNET':3,
+'EDUCATION_MANAGEMENT':4,
+'COMPUTER_SOFTWARE':5,
+'BANKING':6,
+'LOGISTICS_AND_SUPPLYCHAIN':7,
+'EXECUTIVE_OFFICE':8,
+'CIVIL_ENGINEERING':9,
+'FINANCIAL_SERVICES':10,
+'VENTURE_CAPITAL_AND_PRIVATE_EQUITY':11,
+'EVENTS_SERVICES':12,
+'INTERNATIONAL_TRADE_AND_DEVELOPMENT':13,
+'INFORMATION_TECHNOLOGY_AND_SERVICES':1
 }
 roleMap = {
-    'ContentManagerFlow': 0,
-    'Designer': 1,
-    'RegistrationManager': 2,
-    'ContactManager': 3,
-    'Admin': 4,
-    'Marketer': 5,
-    'Generic': 6
+'MARKETING':1,
+'ANALYST':2,
+'HUMAN_RESOURCES':3,
+'SUPPLY_CHAIN':4,
+'ENGINEERING':5,
+'PROJECT_MANAGEMENT':6,
+'MANAGEMENT':7,
+'BUSINESS_DEVELOPMENT':8,
+'INFORMATION_TECHNOLOGY':9
 }
 
-data3 = {
+def keyToValue(key, value):
+    if (key == 'Role'):
+        return roleMap[value]
+    if (key == 'Age'):
+        return value / 100
+    if (key == 'Experience'):
+        return value / 100
+    if (key == 'Industry'):
+        return industryMap[value]
+    else:
+        return value
+
+
+def read_csv_file():
+    return pd.read_csv(CSV_PATH).to_dict(orient='records')
+
+def arrange_imported_data():
+    imported_data = read_csv_file()
+    data_pattern = dict()
+    for row in imported_data:
+        name = row[MAIN_DATA_KEY]
+        data_pattern[name] = dict()
+        del row[MAIN_DATA_KEY]
+        for col_key in row:
+            data_pattern[name][col_key] = row[col_key]
+
+    return data_pattern
+
+
+
+
+
+def replace_models_data(model_dict):
+    index = 0
+    result = model_dict
+    for key in model_dict:
+        result[key] = keyToValue(key, model_dict[key])
+        index += 1
+
+    return result
+
+
+t = arrange_imported_data()
+data3={s: replace_models_data(t[s]) for s in t.keys()}
+data4 = {
     'Lior Plis': {
         'Role': 1.0,
         'Age': 0.25,
@@ -110,6 +170,8 @@ data3 = {
 }
 
 
+
+
 def euclidean_similarity(person1, person2):
     data = data3
     common_ranked_items = [itm for itm in data[person1] if itm in data[person2]]
@@ -136,28 +198,6 @@ def pearson_similarity(person1, person2):
 
     return (num / den) if den != 0 else 0
 
-
-def replace_models_data(model_dict):
-    index = 0
-    result = model_dict
-    for key in model_dict:
-        result[key] = keyToValue(key, model_dict[key])
-        index += 1
-
-    return result
-
-
-def keyToValue(key, value):
-    if (key == 'Role'):
-        return roleMap[value]
-    if (key == 'Age'):
-        return value / 100
-    if (key == 'Experience'):
-        return value / 100
-    if (key == 'Industry'):
-        return industryMap[value]
-
-
 def recommend(person, dataObj, bound, similarity=pearson_similarity):
     personObj = replace_models_data(dataObj)
     data = data3
@@ -167,7 +207,7 @@ def recommend(person, dataObj, bound, similarity=pearson_similarity):
     scores.reverse()
     scores = scores[0:bound]
 
-    # print (scores)
+    #print (scores)
 
     recomms = {}
 
@@ -196,10 +236,10 @@ def recommend(person, dataObj, bound, similarity=pearson_similarity):
 
 
 x = {
-    "Role": 'Marketer',
-    "Age": 30,
-    "Experience": 5,
-    "Industry": 'MARKETING_AND_ADVERTISING'
+    "Role": 'MARKETING',
+    "Age": 50,
+    "Experience": 4,
+    "Industry": 'INTERNET'
 }
 
 flowMap = {
@@ -281,6 +321,12 @@ stepMap = {
     'https://accounts.bizzabo.com/{accountId}/events/{eventId}/promos': 24
 }
 
-#list = recommend('name', x, 5)
-#for itm in list:
-    #print(itm)
+#dict = recommend('liora', x, 5)
+
+#for itm in dict.keys():
+ #   print(itm)
+  #  for i in (dict[itm]):
+   #     print(i)
+
+
+
