@@ -3,7 +3,7 @@ import json
 from logic import recommend
 app = Flask(__name__)
 
-@app.route('similarityAlg/health')
+@app.route('/similarityAlg/health')
 def hello_world():
     return 'Hi there, im healthy!'
 
