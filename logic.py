@@ -1,7 +1,24 @@
 import math
-import pandas as pd
 
 
+
+
+industryMap = {
+    'MARKETING_AND_ADVERTISING': 1,
+    'INTERNET': 2,
+    'EDUCATION_MANAGEMENT': 3,
+    'COMPUTER_SOFTWARE': 4,
+    'BANKING': 5
+}
+roleMap = {
+    'ContentManagerFlow': 0,
+    'Designer': 1,
+    'RegistrationManager': 2,
+    'ContactManager': 3,
+    'Admin': 4,
+    'Marketer': 5,
+    'Generic': 6
+}
 
 
 data3 ={
@@ -124,8 +141,28 @@ def pearson_similarity(person1, person2):
 
     return (num / den) if den != 0 else 0
 
+def replace_models_data(model_dict):
+    index = 0
+    result = model_dict
+    for key in model_dict:
+        result[key] = keyToValue(key, model_dict[key])
+        index += 1
 
-def recommend(person,personObj, bound, similarity=pearson_similarity):
+    return result
+
+
+def keyToValue(key, value):
+    if (key == 'Role'):
+        return roleMap[value]
+    if (key == 'Age'):
+        return value / 100
+    if (key == 'Experience'):
+        return value / 100
+    if (key == 'Industry'):
+        return industryMap[value]
+
+def recommend(person,dataObj, bound, similarity=pearson_similarity):
+    personObj = replace_models_data(dataObj)
     data = data3
     data[person] = personObj
     scores = [(similarity(person, other), other) for other in data if other != person]
@@ -133,7 +170,7 @@ def recommend(person,personObj, bound, similarity=pearson_similarity):
     scores.reverse()
     scores = scores[0:bound]
 
-    print (scores)
+    #print (scores)
 
     recomms = {}
 
@@ -154,11 +191,70 @@ def recommend(person,personObj, bound, similarity=pearson_similarity):
         sim, item = recomms[r]
         recomms[r] = sum(item) / sim
 
-    return recomms
+    t=flowMap[(str(int(recomms['flow'])))],recomms['flow']
+    return t
 
 
-# print(recommend('Liora Plisa',{
-#                 'Role': 4.36,
-#         'Age': 4.0,
-#         'Experience': 2.1,
-#         'Industry': 3.0,},5,euclidean_similarity))
+x={
+"Role": 'Marketer',
+"Age":30,
+"Experience": 5,
+"Industry": 'MARKETING_AND_ADVERTISING'
+}
+
+flowMap = {
+    # Content Manager flow
+    '1':
+        ['https://accounts.bizzabo.com/{accountId}/events/{eventId}/info/general',
+          'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/speakers/manage',
+          'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/agenda/manageTags',
+          'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/agenda/locations',
+          'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/agenda/editor',
+          'https://accounts.bizzabo.com/{accountId}/events/{eventId}/tickets/registration/sessionRegistration',
+          'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/website/settings'],
+
+    # Designer
+    '2':
+        ['https://accounts.bizzabo.com/preview/{accountId}/events/{eventId}',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/app',
+         'https://accounts.bizzabo.com/{accountId}/mobileApp']
+    ,
+
+    # Contact/Registration Manager
+    '3':
+        ['https://accounts.bizzabo.com/{accountId}/events/{eventId}/tickets/setup/create',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/tickets/registration/form',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/tickets/registration/confirmation',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/promos'],
+
+    # Admin
+    '4':
+        ['https://accounts.bizzabo.com/{accountId}/team',
+         'https://accounts.bizzabo.com/{accountId}/payment/processor',
+         'https://accounts.bizzabo.com/{accountId}/customEmail',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/reports/registrations',
+         'https://accounts.bizzabo.com/{accountId}/account/subscriptionUsage'],
+
+    # Marketing Exec.
+    '5':
+        ['https://accounts.bizzabo.com/132427/events/{eventId}/contacts/contacts',
+         'https://accounts.bizzabo.com/132427/events/{eventId}/promote/ticketBoost',
+         'https://accounts.bizzabo.com/132427/events/{eventId}/contacts/emailAttendee',
+         'https://accounts.bizzabo.com/132427/events/{eventId}/promote/socialShare',
+         'https://accounts.bizzabo.com/132427/events/{eventId}/apps/website/trackingPixel']
+    ,
+
+    # Generic User
+    '6':
+        ['https://accounts.bizzabo.com/{accountId}/events/{eventId}/tickets/setup/create',
+         'https://accounts.bizzabo.com/preview/{accountId}/events/{eventId}',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/tickets/registration/form',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/agenda/editor',
+         'https://accounts.bizzabo.com/{accountId}/events/{eventId}/apps/website/settings']
+
+
+}
+
+#list = recommend('name', x, 5)
+#for itm in list:
+#    print(itm)
