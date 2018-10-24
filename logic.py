@@ -157,8 +157,8 @@ def recommend(person,personObj, bound, similarity=pearson_similarity):
     return recomms
 
 
-print(recommend('Liora Plisa',{
-                'Role': 4.36,
-        'Age': 4.0,
-        'Experience': 2.1,
-        'Industry': 3.0,},5,euclidean_similarity))
+# print(recommend('Liora Plisa',{
+#                 'Role': 4.36,
+#         'Age': 4.0,
+#         'Experience': 2.1,
+#         'Industry': 3.0,},5,euclidean_similarity))
