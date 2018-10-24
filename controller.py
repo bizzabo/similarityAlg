@@ -3,6 +3,11 @@ import json
 from logic import recommend
 app = Flask(__name__)
 
+@app.route('/health')
+def hello_world():
+    return 'Hi there, im healthy!'
+
+
 @app.route('/api/v2/flow/recommend', methods=['POST'])
 def reccommend():
     person = request.json
